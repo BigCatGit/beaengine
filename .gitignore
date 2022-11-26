@@ -6,3 +6,4 @@ bin
 build
 doc/*.pdf
 .vscode
+.vs
