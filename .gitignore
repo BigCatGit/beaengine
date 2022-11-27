@@ -7,3 +7,5 @@ build
 doc/*.pdf
 .vscode
 .vs
+Debug
+Release

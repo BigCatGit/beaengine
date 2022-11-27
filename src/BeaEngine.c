@@ -51,3 +51,55 @@
 #include "Includes/BeaEngineVersion.c"
 
 void BeaEngine(void){return;}
+
+int __bea_callspec__ DisasmToString(char* codes, int len, bool isX64, unsigned __int64 virtualAddr, char* outBuff, int outBuffLen)
+{
+	DISASM Disasm_Info;
+	char* end_offset = (char*)codes + len;
+	(void)memset(&Disasm_Info, 0, sizeof(DISASM));
+	Disasm_Info.EIP = (UInt64)codes;
+	if (virtualAddr > 0) {
+		Disasm_Info.VirtualAddr = virtualAddr;
+	}
+	Disasm_Info.Archi = isX64 ? 0 : 1;                      // 1 = 表示反汇编32位 / 0 = 表示反汇编64位
+	Disasm_Info.Options = MasmSyntax;           // 指定语法格式 MASM
+	int count = 0;
+
+	while (!Disasm_Info.Error)
+	{
+		if (count >= outBuffLen - 2) {
+			return 0;
+		}
+		Disasm_Info.SecurityBlock = (UInt64)end_offset - Disasm_Info.EIP;
+		if (Disasm_Info.SecurityBlock <= 0)
+			break;
+		len = Disasm(&Disasm_Info);
+		switch (Disasm_Info.Error)
+		{
+		case OUT_OF_BLOCK:
+			break;
+		case UNKNOWN_OPCODE:
+			Disasm_Info.EIP += 1;
+			Disasm_Info.Error = 0;
+			if (virtualAddr > 0) {
+				Disasm_Info.VirtualAddr += 1;
+			}
+			break;
+		default:
+			if (virtualAddr > 0) {
+				char tmp[128] = { 0 };
+				//printf("%.16llx > %s\n", Disasm_Info.VirtualAddr, &Disasm_Info.CompleteInstr);
+				sprintf(tmp, "%.16llx > %s\r\n", Disasm_Info.VirtualAddr, &Disasm_Info.CompleteInstr);
+				strcat(outBuff, tmp);
+			}
+			else {
+				//printf("%s \n", &Disasm_Info.CompleteInstr);
+				strcat(outBuff, Disasm_Info.CompleteInstr);
+			}
+			strcat(outBuff, "\r\n");
+			count += strlen(Disasm_Info.CompleteInstr);
+			Disasm_Info.EIP += len;
+		}
+	}
+	return count;
+}
