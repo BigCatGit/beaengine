@@ -9,7 +9,7 @@
 //{
 //	char buffer[] = {0x48, 0xC7, 0xC0, 0x01, 0x00, 0x00, 0x00, 0x48, 0x89, 0xCB};
 //	char str[256] = { 0 };
-//	DisasmToString((char*)buffer, sizeof(buffer), true, 0, str, sizeof(str));
+//	DisasmToString((char*)buffer, sizeof(buffer), true, PrefixedNumeral, 0, str, sizeof(str));
 //	printf(str);
 //	getchar();
 //	return 0;

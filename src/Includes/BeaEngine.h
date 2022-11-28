@@ -488,7 +488,7 @@ BEA_API int __bea_callspec__ Disasm (LPDISASM pDisAsm);
 BEA_API const__ char* __bea_callspec__ BeaEngineVersion (void);
 BEA_API const__ char* __bea_callspec__ BeaEngineRevision (void);
 // ·´»ã±à·â×°º¯Êý
-BEA_API int __bea_callspec__ DisasmToString(char* codes, int len, bool isX64, unsigned __int64 virtualAddr, char* outBuff, int outBuffLen);
+BEA_API int __bea_callspec__ DisasmToString(char* codes, int len, bool isX64, unsigned __int64 option, unsigned __int64 virtualAddr, char* outBuff, int outBuffLen);
 
 
 #ifdef __cplusplus

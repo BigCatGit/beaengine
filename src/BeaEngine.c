@@ -1,4 +1,4 @@
-/*
+﻿/*
  * BeaEngine 4 - x86 & x86-64 disassembler library
  *
  * Copyright 2006-2020, BeatriX
@@ -52,7 +52,7 @@
 
 void BeaEngine(void){return;}
 
-int __bea_callspec__ DisasmToString(char* codes, int len, bool isX64, unsigned __int64 virtualAddr, char* outBuff, int outBuffLen)
+int __bea_callspec__ DisasmToString(char* codes, int len, bool isX64, unsigned __int64 option, unsigned __int64 virtualAddr, char* outBuff, int outBuffLen)
 {
 	DISASM Disasm_Info;
 	char* end_offset = (char*)codes + len;
@@ -61,8 +61,14 @@ int __bea_callspec__ DisasmToString(char* codes, int len, bool isX64, unsigned _
 	if (virtualAddr > 0) {
 		Disasm_Info.VirtualAddr = virtualAddr;
 	}
-	Disasm_Info.Archi = isX64 ? 0 : 1;                      // 1 = ��ʾ�����32λ / 0 = ��ʾ�����64λ
-	Disasm_Info.Options = MasmSyntax;           // ָ���﷨��ʽ MASM
+	Disasm_Info.Archi = isX64 ? 0 : 1;               // 1 = 表示反汇编32位 / 0 = 表示反汇编64位
+	if (option)
+	{
+		Disasm_Info.Options = PrefixedNumeral;           // 默认语法格式 MasmSyntax, PrefixedNumeral: 为前缀加0x方式显示常量, 我们要行这种
+	}
+	else {
+		Disasm_Info.Options = MasmSyntax;
+	}
 	int count = 0;
 
 	while (!Disasm_Info.Error)
